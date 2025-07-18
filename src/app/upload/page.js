@@ -12,7 +12,7 @@ export default async function UploadPage() {
 
   return (
     <>
-      <Header user={user} />         {/* ✅ pass user to Header */}
+            
       <UploadForm user={user} />     {/* ✅ pass user to UploadForm */}
     </>
   );

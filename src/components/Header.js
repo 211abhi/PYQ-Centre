@@ -34,7 +34,7 @@ export default function Header() {
   return (
     <header className="flex justify-between items-center p-4 border-b">
       <Link href="/" className="text-xl font-bold">
-        PYQ Nepal
+        PYQ Centre
       </Link>
       <nav className="flex items-center gap-4">
         <Link href="/upload">Upload</Link>
