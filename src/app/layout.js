@@ -1,16 +1,14 @@
-// src/app/layout.js
-
 import "./globals.css";
 import Header from "@/components/Header";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
 export const metadata = {
-  title: "PYQ Nepal",
+  title: "PYQ Centre",
 };
 
 export default async function RootLayout({ children }) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies }); 
   const {
     data: { user },
   } = await supabase.auth.getUser();

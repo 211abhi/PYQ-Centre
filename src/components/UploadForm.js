@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function UploadForm() {
-  const [user, setUser] = useState(null);
   const [file, setFile] = useState(null);
   const [university, setUniversity] = useState("");
   const [degree, setDegree] = useState("");
@@ -12,10 +11,13 @@ export default function UploadForm() {
   const [subject, setSubject] = useState("");
   const [status, setStatus] = useState("");
 
+  // Get user session, only to show "Sign in" message
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      console.log("Client user ID:", user?.id);
     };
     getUser();
   }, []);
@@ -23,6 +25,7 @@ export default function UploadForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    //  only for signed-in users
     if (!user) {
       setStatus("❌ Please sign in first.");
       return;
@@ -41,33 +44,33 @@ export default function UploadForm() {
     setStatus("⏳ Uploading...");
 
     try {
-      // 1️⃣ Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("question-papers")
         .upload(`public/${Date.now()}-${file.name}`, file);
 
       if (uploadError) throw uploadError;
 
-      // 2️⃣ Get the public URL
+      
       const { data: publicURLData } = supabase.storage
         .from("question-papers")
         .getPublicUrl(uploadData.path);
 
-      // 3️⃣ Insert metadata to DB — **with correct uploader_id**
+      
       const { error: insertError } = await supabase.from("question_papers").insert({
         university,
         degree,
         year,
         subject,
         file_url: publicURLData.publicUrl,
-        uploader_id: user.id,   // ✅ This must match auth.uid()
         approved: false,
+        uploader_id: user.id,  
+
       });
 
       if (insertError) throw insertError;
 
       setStatus("✅ Upload successful! Awaiting admin approval.");
-      // Reset form
+
       setFile(null);
       setUniversity("");
       setDegree("");
@@ -79,12 +82,16 @@ export default function UploadForm() {
     }
   };
 
+
   if (!user) {
     return <p className="text-center text-red-600">Please sign in to upload a question paper.</p>;
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto p-4 border rounded shadow">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 max-w-md mx-auto p-4 border rounded shadow"
+    >
       <input
         type="file"
         accept="application/pdf"
