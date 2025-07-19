@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 
 // Simple admin verification for API routes
 function isValidAdminRequest(request) {
@@ -13,6 +13,7 @@ export async function POST(request) {
   }
 
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const { paperId, action } = await request.json();
 
     if (!paperId || !action) {

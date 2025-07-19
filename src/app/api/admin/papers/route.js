@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 
 // Simple admin verification for API routes
 function isValidAdminRequest(request) {
@@ -13,6 +13,8 @@ export async function GET(request) {
   }
 
   try {
+    const supabaseAdmin = getSupabaseAdmin();
+    
     // Get all papers with admin privileges (bypasses RLS)
     const { data: papers, error } = await supabaseAdmin
       .from('question_papers')
