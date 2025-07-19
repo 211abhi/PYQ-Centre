@@ -1,36 +1,228 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📚 PYQ Nepal - Previous Year Questions Platform
 
-## Getting Started
+A modern, responsive web platform for sharing and accessing Previous Year Questions (PYQ) papers for academic purposes in Nepal. Built with Next.js, Supabase, and Tailwind CSS.
 
-First, run the development server:
+![PYQ Nepal Platform](https://img.shields.io/badge/Next.js-15.3.5-black?style=for-the-badge&logo=next.js)
+![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=for-the-badge&logo=supabase)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-blue?style=for-the-badge&logo=tailwindcss)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+
+### 🔍 **Public Search**
+- Browse and search approved question papers
+- Filter by subject, year, university, and exam type
+- Download papers with a single click
+- Responsive design for all devices
+
+### 📤 **Upload System**
+- Secure file upload for authenticated users
+- Support for PDF documents
+- Metadata collection (subject, year, university, etc.)
+- Real-time upload progress and status
+
+### 🛡️ **Admin Panel**
+- Secure admin authentication system
+- Review and approve/reject uploaded papers
+- Dashboard with statistics and insights
+- Bulk paper management tools
+
+### 🎨 **Modern UI/UX**
+- Dark/Light mode toggle
+- Responsive design (mobile-first)
+- Beautiful card-based layouts
+- Intuitive navigation and search
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ installed
+- Supabase account and project
+- Git installed
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/211abhi/pyq-nepal.git
+   cd pyq-nepal
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Fill in your Supabase credentials in `.env.local`:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
+4. **Set up Supabase database**
+   - Run the SQL commands from `supabase_rls_policies.sql` in your Supabase SQL editor
+   - Create the `question_papers` table with appropriate columns
+
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🏗️ Project Structure
+
+```
+pyq-nepal/
+├── src/
+│   ├── app/
+│   │   ├── admin/           # Admin panel pages
+│   │   ├── api/             # API routes
+│   │   ├── upload/          # Upload page
+│   │   └── ...
+│   ├── components/
+│   │   ├── Header.js        # Navigation header
+│   │   ├── SearchPapers.js  # Public search component
+│   │   ├── UploadForm.js    # File upload form
+│   │   └── AdminDashboard.js # Admin management
+│   └── lib/
+│       ├── supabaseClient.js    # Public Supabase client
+│       └── supabaseAdmin.js     # Admin Supabase client
+├── public/
+│   ├── logo_light.png       # Light mode logo
+│   └── logo_dark.png        # Dark mode logo
+└── supabase_rls_policies.sql
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔧 Configuration
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Supabase Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Create a new Supabase project**
+2. **Set up the database table:**
+   ```sql
+   CREATE TABLE question_papers (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     title TEXT NOT NULL,
+     subject TEXT NOT NULL,
+     year INTEGER NOT NULL,
+     university TEXT NOT NULL,
+     exam_type TEXT NOT NULL,
+     file_url TEXT NOT NULL,
+     file_name TEXT NOT NULL,
+     uploader_id UUID REFERENCES auth.users(id),
+     approved BOOLEAN DEFAULT false,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+   );
+   ```
 
-## Learn More
+3. **Apply Row Level Security policies** (from `supabase_rls_policies.sql`)
 
-To learn more about Next.js, take a look at the following resources:
+### Admin Access
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Navigate to `/admin` in your browser
+- Login credentials:
+  - **Username**: `admin1` or `admin2`
+  - **Password**: `iamadmin`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Deployment
 
-## Deploy on Vercel
+### Deploy to Vercel (Recommended)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Install Vercel CLI**
+   ```bash
+   npm install -g vercel
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Deploy**
+   ```bash
+   vercel
+   ```
+
+3. **Add environment variables** in Vercel dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+
+### Deploy to Netlify
+
+1. **Build the project**
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy to Netlify** via dashboard or CLI
+
+## 🛡️ Security Features
+
+- **Row Level Security (RLS)** on database
+- **Secure admin authentication**
+- **Protected API routes** with authentication
+- **File upload validation**
+- **Session-based access control**
+
+## 🎯 Usage
+
+### For Students
+1. Visit the homepage to search papers
+2. Use filters to find specific papers
+3. Download papers directly
+4. Sign up to upload your own papers
+
+### For Contributors
+1. Sign in with Google/GitHub
+2. Upload question papers via the Upload page
+3. Wait for admin approval
+4. Papers appear in public search once approved
+
+### For Administrators
+1. Navigate to `/admin`
+2. Login with admin credentials
+3. Review pending papers
+4. Approve or reject submissions
+5. Monitor platform statistics
+
+## 🔮 Future Enhancements
+
+- [ ] User profiles and contribution tracking
+- [ ] Advanced search with OCR text extraction
+- [ ] Mobile app development
+- [ ] University-specific portals
+- [ ] Notification system for approvals
+- [ ] Bulk upload functionality
+- [ ] Analytics dashboard
+- [ ] API for third-party integrations
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) for the React framework
+- [Supabase](https://supabase.com/) for backend and authentication
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Vercel](https://vercel.com/) for deployment platform
+
+## 📞 Contact
+
+- **Project Link**: [https://github.com/211abhi/pyq-nepal](https://github.com/211abhi/pyq-nepal)
+- **Live Demo**: [https://pyq-nepal.vercel.app](https://pyq-nepal.vercel.app)
+
+---
+
+Made with ❤️ for the academic community of Nepal
