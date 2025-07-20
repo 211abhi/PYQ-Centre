@@ -135,7 +135,9 @@ export default function AdminDashboard({ user, onLogout }) {
       subject: paper.subject,
       university: paper.university,
       degree: paper.degree,
-      year: paper.year
+      year: paper.year,
+      exam_type: paper.exam_type,
+      academic_year: paper.academic_year
     });
   };
 
@@ -534,6 +536,35 @@ export default function AdminDashboard({ user, onLogout }) {
                     onChange={(e) => setEditForm({...editForm, degree: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
                     placeholder="Enter degree"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Exam Type
+                  </label>
+                  <select
+                    value={editForm.exam_type || ''}
+                    onChange={(e) => setEditForm({...editForm, exam_type: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                  >
+                    <option value="">Select exam type</option>
+                    <option value="mid-sem">Mid-Semester</option>
+                    <option value="end-sem">End-Semester</option>
+                    <option value="term-exam">Term Exam</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Academic Year
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.academic_year || ''}
+                    onChange={(e) => setEditForm({...editForm, academic_year: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    placeholder="e.g., 2023-24"
                   />
                 </div>
 

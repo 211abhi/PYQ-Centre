@@ -12,15 +12,18 @@ export default function SearchPapers() {
     university: "",
     degree: "",
     year: "",
-    subject: ""
+    subject: "",
+    examType: "",
+    academicYear: ""
   });
 
-  // Get unique values for filter dropdowns
   const [filterOptions, setFilterOptions] = useState({
     universities: [],
     degrees: [],
     years: [],
-    subjects: []
+    subjects: [],
+    examTypes: [],
+    academicYears: []
   });
 
   // Fetch approved papers
@@ -52,12 +55,16 @@ export default function SearchPapers() {
         const degrees = [...new Set(data.map(p => p.degree))].filter(Boolean);
         const years = [...new Set(data.map(p => p.year))].filter(Boolean);
         const subjects = [...new Set(data.map(p => p.subject))].filter(Boolean);
+        const examTypes = [...new Set(data.map(p => p.exam_type))].filter(Boolean);
+        const academicYears = [...new Set(data.map(p => p.academic_year))].filter(Boolean);
 
         setFilterOptions({
           universities,
           degrees,
-          years: years.sort().reverse(), // Latest years first
-          subjects
+          years: years.sort().reverse(),
+          subjects,
+          examTypes,
+          academicYears: academicYears.sort().reverse()
         });
       }
     } catch (error) {
@@ -77,15 +84,17 @@ export default function SearchPapers() {
         paper.university?.toLowerCase().includes(search) ||
         paper.degree?.toLowerCase().includes(search) ||
         paper.subject?.toLowerCase().includes(search) ||
-        paper.year?.toString().includes(search)
+        paper.year?.toString().includes(search) ||
+        paper.exam_type?.toLowerCase().includes(search) ||
+        paper.academic_year?.toLowerCase().includes(search)
       );
     }
 
-    // Apply filters
     Object.keys(filters).forEach(key => {
       if (filters[key]) {
+        const dbKey = key === 'examType' ? 'exam_type' : key === 'academicYear' ? 'academic_year' : key;
         filtered = filtered.filter(paper => 
-          paper[key]?.toLowerCase() === filters[key].toLowerCase()
+          paper[dbKey]?.toLowerCase() === filters[key].toLowerCase()
         );
       }
     });
@@ -106,7 +115,9 @@ export default function SearchPapers() {
       university: "",
       degree: "",
       year: "",
-      subject: ""
+      subject: "",
+      examType: "",
+      academicYear: ""
     });
   };
 
@@ -163,7 +174,7 @@ export default function SearchPapers() {
           </div>
 
           {/* Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
             <select
               value={filters.university}
               onChange={(e) => handleFilterChange('university', e.target.value)}
@@ -183,6 +194,30 @@ export default function SearchPapers() {
               <option value="">All Degrees</option>
               {filterOptions.degrees.map(degree => (
                 <option key={degree} value={degree}>{degree}</option>
+              ))}
+            </select>
+
+            <select
+              value={filters.examType}
+              onChange={(e) => handleFilterChange('examType', e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Exam Types</option>
+              {filterOptions.examTypes.map(type => (
+                <option key={type} value={type}>
+                  {type === 'mid-sem' ? 'Mid-Semester' : type === 'end-sem' ? 'End-Semester' : 'Term Exam'}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={filters.academicYear}
+              onChange={(e) => handleFilterChange('academicYear', e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Academic Years</option>
+              {filterOptions.academicYears.map(year => (
+                <option key={year} value={year}>{year}</option>
               ))}
             </select>
 

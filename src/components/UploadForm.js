@@ -9,6 +9,8 @@ export default function UploadForm() {
   const [degree, setDegree] = useState("");
   const [year, setYear] = useState("");
   const [subject, setSubject] = useState("");
+  const [examType, setExamType] = useState("");
+  const [academicYear, setAcademicYear] = useState("");
   const [status, setStatus] = useState("");
 
   // Get user session, only to show "Sign in" message
@@ -60,9 +62,11 @@ export default function UploadForm() {
         degree,
         year,
         subject,
+        exam_type: examType,
+        academic_year: academicYear,
         file_url: publicURLData.publicUrl,
         approved: false,
-        uploader_id: user.id,  
+        uploader_id: user.id,
 
       });
 
@@ -75,6 +79,8 @@ export default function UploadForm() {
       setDegree("");
       setYear("");
       setSubject("");
+      setExamType("");
+      setAcademicYear("");
     } catch (err) {
       console.error(err);
       setStatus(`❌ Upload failed: ${err.message}`);
@@ -161,6 +167,33 @@ export default function UploadForm() {
                     placeholder="e.g., Bachelor of Engineering"
                     value={degree}
                     onChange={(e) => setDegree(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exam Type</label>
+                  <select
+                    value={examType}
+                    onChange={(e) => setExamType(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="">Select exam type</option>
+                    <option value="mid-sem">Mid-Semester</option>
+                    <option value="end-sem">End-Semester</option>
+                    <option value="term-exam">Term Exam</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Academic Year</label>
+                  <input
+                    type="text"
+                    placeholder="e.g., 2023-24"
+                    value={academicYear}
+                    onChange={(e) => setAcademicYear(e.target.value)}
                     required
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   />
