@@ -1,4 +1,4 @@
-# 📚 PYQ Centre - Previous Year Questions Platform
+# 📚 PYQ Centre - Previous Year Questions 
 
 A modern, responsive web platform for sharing and accessing Previous Year Questions (PYQ) papers for academic purposes. Built with Next.js, Supabase, and Tailwind CSS.
 
